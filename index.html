@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Drama Character Creator ✨ | Discover Your K-Drama Alter Ego</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b9d;
+            --secondary: #c44569;
+            --accent: #f8b500;
+            --dark: #2c3e50;
+            --light: #fff5f7;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --pink-gradient: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: var(--pink-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/hero-bg.jpg') center/cover;
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            padding: 18px 50px;
+            background: white;
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 0.4s backwards;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* Quiz Section */
+        .quiz-section {
+            padding: 5rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            display: none;
+        }
+        
+        .quiz-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--pink-gradient);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+        
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .option {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            background: #fff5f7;
+            transform: translateX(5px);
+        }
+        
+        .option-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* Results Section */
+        .results-section {
+            padding: 5rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .character-card {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+        
+        .character-image {
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .character-image img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        .character-info {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .character-type {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--pink-gradient);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+        
+        .character-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .character-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .character-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .trait {
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .share-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .share-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+        
+        .share-btn.facebook {
+            background: #4267B2;
+            color: white;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: white;
+        }
+        
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 20px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .character-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>✨ K-Drama Character Creator</h1>
+            <p>Discover your K-Drama alter ego! Answer 8 personality questions and our AI will reveal which Korean drama character matches your soul.</p>
+            <button class="btn-primary" onclick="startQuiz()">Start Your Journey 🎭</button>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quizSection">
+        <div class="quiz-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div id="questionContainer">
+                <!-- Questions injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection">
+        <div class="character-card">
+            <div class="character-image">
+                <img id="resultImage" src="" alt="Your K-Drama Character">
+            </div>
+            <div class="character-info">
+                <span class="character-type" id="characterType">THE LEAD</span>
+                <h2 class="character-name" id="characterName">Romantic Protagonist</h2>
+                <p class="character-description" id="characterDescription">
+                    You're the heart of every story! With your warm personality and determination, 
+                    you capture everyone's attention. Your journey is filled with growth, love, and triumph.
+                </p>
+                <div class="character-traits" id="characterTraits">
+                    <!-- Traits injected by JS -->
+                </div>
+                <div class="share-buttons">
+                    <button class="share-btn twitter" onclick="shareTwitter()">Share on Twitter</button>
+                    <button class="share-btn facebook" onclick="shareFacebook()">Share on Facebook</button>
+                </div>
+                <button class="btn-primary" style="margin-top: 2rem;" onclick="retakeQuiz()">Retake Quiz ↺</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <h3 class="feature-title">AI-Powered Analysis</h3>
+                <p>Our advanced AI analyzes your personality to match you with the perfect K-Drama character archetype.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3 class="feature-title">Unique Character Art</h3>
+                <p>Each result comes with stunning AI-generated character artwork created just for you.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Shareable Results</h3>
+                <p>Share your K-Drama alter ego with friends and compare your results on social media!</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with 💖 by Forge AI | K-Drama Character Creator 2026</p>
+    </footer>
+
+    <script>
+        // Quiz Data
+        const questions = [
+            {
+                question: "It's a rainy evening in Seoul. Where are you?",
+                options: [
+                    { icon: "☕", text: "At a cozy café reading a book", value: "romantic" },
+                    { icon: "💼", text: "Working late at the office", value: "career" },
+                    { icon: "🍜", text: "Eating ramyeon at a street stall", value: "relatable" },
+                    { icon: "🏃", text: "Running through the rain dramatically", value: "dramatic" }
+                ]
+            },
+            {
+                question: "Your ideal first date would be...",
+                options: [
+                    { icon: "🎡", text: "Amusement park with cotton candy", value: "playful" },
+                    { icon: "🌃", text: "Rooftop dinner with city views", value: "sophisticated" },
+                    { icon: "📚", text: "Bookstore browsing together", value: "intellectual" },
+                    { icon: "🍳", text: "Cooking together at home", value: "domestic" }
+                ]
+            },
+            {
+                question: "Someone wrongs your loved one. You...",
+                options: [
+                    { icon: "⚖️", text: "Seek justice through proper channels", value: "lawful" },
+                    { icon: "🔥", text: "Confront them immediately", value: "passionate" },
+                    { icon: "🧠", text: "Plan the perfect revenge", value: "strategic" },
+                    { icon: "💪", text: "Protect your loved one first", value: "protective" }
+                ]
+            },
+            {
+                question: "Your fashion style is best described as...",
+                options: [
+                    { icon: "👔", text: "Elegant and professional", value: "elegant" },
+                    { icon: "👟", text: "Casual and comfortable", value: "casual" },
+                    { icon: "✨", text: "Trendy and eye-catching", value: "trendy" },
+                    { icon: "🎨", text: "Unique and artistic", value: "artistic" }
+                ]
+            },
+            {
+                question: "In a love triangle, you're most likely to be...",
+                options: [
+                    { icon: "💝", text: "The one everyone falls for", value: "lead" },
+                    { icon: "😊", text: "The supportive second lead", value: "second" },
+                    { icon: "🤝", text: "The matchmaker friend", value: "friend" },
+                    { icon: "🎯", text: "The one who fights for love", value: "fighter" }
+                ]
+            },
+            {
+                question: "Your biggest strength is...",
+                options: [
+                    { icon: "❤️", text: "Your kind heart", value: "kind" },
+                    { icon: "🧠", text: "Your intelligence", value: "smart" },
+                    { icon: "😄", text: "Your sense of humor", value: "funny" },
+                    { icon: "🎭", text: "Your dramatic flair", value: "charismatic" }
+                ]
+            },
+            {
+                question: "Your life motto would be...",
+                options: [
+                    { icon: "🌟", text: "Follow your heart", value: "romantic" },
+                    { icon: "📈", text: "Work hard, dream big", value: "ambitious" },
+                    { icon: "🤗", text: "Family comes first", value: "family" },
+                    { icon: "🎪", text: "Live life to the fullest", value: "adventurous" }
+                ]
+            },
+            {
+                question: "Pick your K-Drama OST moment...",
+                options: [
+                    { icon: "💋", text: "The accidental kiss scene", value: "rom-com" },
+                    { icon: "😢", text: "The emotional breakup in the rain", value: "melodrama" },
+                    { icon: "⚔️", text: "The intense confrontation", value: "thriller" },
+                    { icon: "🏃", text: "The chase to the airport", value: "romance" }
+                ]
+            }
+        ];
+
+        // Character Results
+        const characters = {
+            romantic: {
+                type: "THE ROMANTIC LEAD",
+                name: "The Pure-Hearted Protagonist",
+                image: "images/female-lead.jpg",
+                description: "You're the heart-fluttering main character everyone roots for! With your genuine personality and optimistic outlook, you bring light to everyone around you. Your love story would be filled with sweet moments and personal growth.",
+                traits: ["Optimistic", "Kind-hearted", "Determined", "Loyal"]
+            },
+            chaebol: {
+                type: "THE CHAEBOL HEIR",
+                name: "The Cold-Warm Executive",
+                image: "images/chaebol.jpg",
+                description: "You give off ice prince/princess vibes but have a secretly warm heart! You value success and carry yourself with confidence. Once someone breaks through your walls, they'd discover your hidden soft side.",
+                traits: ["Ambitious", "Mysterious", "Protective", "Generous"]
+            },
+            second: {
+                type: "THE SECOND LEAD",
+                name: "The Loyal Supporter",
+                image: "images/second-lead.jpg",
+                description: "You might not always get the spotlight, but you're the unsung hero! Your selfless nature and unwavering support make you indispensable. The right person will see your worth.",
+                traits: ["Supportive", "Patient", "Caring", "Selfless"]
+            },
+            career: {
+                type: "THE CAREER WOMAN",
+                name: "The Independent Achiever",
+                image: "images/career-woman.jpg",
+                description: "You're a force to be reckoned with! Your drive and independence set you apart. You prove that you can be successful AND find love on your own terms.",
+                traits: ["Independent", "Confident", "Hardworking", "Smart"]
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        function startQuiz() {
+            document.querySelector('.hero').style.display = 'none';
+            document.getElementById('quizSection').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            document.getElementById('questionContainer').innerHTML = `
+                <h2 class="question">${q.question}</h2>
+                <div class="options">
+                    ${q.options.map((opt, idx) => `
+                        <div class="option" onclick="selectOption(${idx})">
+                            <span class="option-icon">${opt.icon}</span>
+                            <span>${opt.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function selectOption(idx) {
+            const q = questions[currentQuestion];
+            answers.push(q.options[idx].value);
+            
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.add('active');
+            
+            // Calculate result based on most common answer
+            const counts = {};
+            answers.forEach(a => {
+                counts[a] = (counts[a] || 0) + 1;
+            });
+            
+            // Map to character types
+            const romantic = ['romantic', 'playful', 'lead', 'kind', 'rom-com'];
+            const chaebol = ['career', 'sophisticated', 'lawful', 'elegant', 'ambitious'];
+            const secondLead = ['relatable', 'friend', 'casual', 'funny', 'family'];
+            const career = ['protective', 'strategic', 'fighter', 'smart', 'thriller'];
+            
+            let charType = 'romantic';
+            let maxCount = 0;
+            
+            romantic.forEach(t => {
+                if (counts[t] > maxCount) { maxCount = counts[t]; charType = 'romantic'; }
+            });
+            chaebol.forEach(t => {
+                if (counts[t] > maxCount) { maxCount = counts[t]; charType = 'chaebol'; }
+            });
+            secondLead.forEach(t => {
+                if (counts[t] > maxCount) { maxCount = counts[t]; charType = 'second'; }
+            });
+            career.forEach(t => {
+                if (counts[t] > maxCount) { maxCount = counts[t]; charType = 'career'; }
+            });
+            
+            const char = characters[charType];
+            
+            document.getElementById('characterType').textContent = char.type;
+            document.getElementById('characterName').textContent = char.name;
+            document.getElementById('characterDescription').textContent = char.description;
+            document.getElementById('resultImage').src = char.image;
+            
+            document.getElementById('characterTraits').innerHTML = char.traits
+                .map(t => `<span class="trait">${t}</span>`)
+                .join('');
+        }
+
+        function shareTwitter() {
+            const char = document.getElementById('characterName').textContent;
+            const text = `I got "${char}" on the K-Drama Character Creator! ✨ Who's your K-Drama alter ego?`;
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareFacebook() {
+            const url = window.location.href;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function retakeQuiz() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('resultsSection').classList.remove('active');
+            document.querySelector('.hero').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
